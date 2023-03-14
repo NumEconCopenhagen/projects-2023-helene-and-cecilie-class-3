@@ -1,9 +1,8 @@
 # \[Group name\]
 
 **Group members:**
-- A
-- B
-- C
+- Cecilie Gøtterup-Hansen
+- Helene Thomsen
 
 This repository contains  
 1. Inaugural project. 
