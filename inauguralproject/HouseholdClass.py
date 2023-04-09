@@ -58,6 +58,8 @@ class HouseholdSpecializationModelClass:
         elif par.sigma == 1:
             H = HM**(1-par.alpha)*HF**par.alpha
         else:
+            HM = np.fmax(1e-8,HM)
+            HF = np.fmax(1e-8,HF)
             H = ((1-par.alpha)*HM**((par.sigma-1)/(par.sigma)) + par.alpha*HF**((par.sigma-1)/(par.sigma)))**(par.sigma/(par.sigma-1))
 
         # c. total consumption utility
@@ -125,7 +127,7 @@ class HouseholdSpecializationModelClass:
             LM, HM, LF, HF = x
             return [24 - LM - HM, 24 - LF - HF]
         
-        constraints = ({'type':'ineq', 'fun': constraints})
+        #constraints = ({'type':'ineq', 'fun': constraints}) - Nelder-Mead does not work with constraints
         bounds = ((0,24),(0,24),(0,24),(0,24))
 
         # initial guess
@@ -135,8 +137,7 @@ class HouseholdSpecializationModelClass:
         solution = optimize.minimize(
             objective, initial_guess, 
             method='Nelder-Mead', 
-            bounds=bounds, 
-            constraints=constraints
+            bounds=bounds
             )
         
         opt.LM, opt.HM, opt.LF, opt.HF = solution.x
