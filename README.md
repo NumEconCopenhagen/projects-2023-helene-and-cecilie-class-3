@@ -1,4 +1,4 @@
-# \helene-and-cecilie-class-3\
+# \[helene-and-cecilie-class-3]\
 
 **Group members:**
 - Cecilie Gøtterup-Hansen
