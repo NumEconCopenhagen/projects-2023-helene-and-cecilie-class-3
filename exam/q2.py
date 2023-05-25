@@ -9,6 +9,8 @@ from sympy import *
 sm.init_printing()
 import matplotlib.pyplot as plt
 from IPython.display import display, Math, Markdown
+from types import SimpleNamespace
+
 
 def profits(kappa, l, eta, w):
     return kappa*l**(1-eta)-w*l
@@ -20,4 +22,6 @@ def max_profits(kappa, eta, w):
     optimal_l = sol.x
 
     return optimal_l
+
+        
 
