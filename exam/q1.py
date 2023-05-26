@@ -41,19 +41,20 @@ def optimal_tau():
 
     return optimal_tau, max_utility
 
-sigma = 1.5
-rho = 1.5
+sigma = 1.001
+rho = 1.001
 epsilon = 1.0
 
-def CES_utility(tau, kappa, alpha, nu, w, sigma, rho, epsilon, L, G):
+def CES_utility(tau, kappa, alpha, nu, w, sigma, rho, epsilon, L):
     C = kappa+(1-tau)*w*L
+    G = tau*w*L
     num = ((alpha*C**((sigma-1)/sigma)+(1-alpha)*G**((sigma-1)/sigma))**(sigma/(sigma-1)))**(1-rho)-1
     den = 1-rho
     return num/den-(nu*L**(1+epsilon)/(1+epsilon))
 
 def labor_supply(tau, w):
     # Define the objective function for labor supply
-    obj = lambda L: -CES_utility(tau, kappa, alpha, nu, w, sigma, rho, epsilon, L, G)
+    obj = lambda L: -CES_utility(tau, kappa, alpha, nu, w, sigma, rho, epsilon, L)
  
     L_min = 0
     L_max = 24
@@ -63,12 +64,22 @@ def labor_supply(tau, w):
     res = optimize.minimize(obj, x0, bounds=[(L_min, L_max)], method='Nelder-Mead')
     # Find the optimal labor supply that maximizes utility
     optimal_L = res.x[0]
+    G = tau*w*optimal_L
     return optimal_L
 
 def find_G(tau, w, L):
-    # Define the objective function for finding G
-    #obj = lambda G:
-    
-    # Find the value of G that satisfies the equation G = tau * w * optimal labor supply
-    result = optimize.minimize_scalar(obj, method='brent')
-    return result.x
+    return tau*w*L
+
+# solve for optimal tau
+def CES_optimal_tau():
+
+    # define objective function as a function of tau
+    obj = lambda CES_tau: -CES_utility(CES_tau, kappa, alpha, nu, w, sigma, rho, epsilon, labor_supply(CES_tau,w)) # negative sign -> we wish to maximize
+
+    # minimize the negative utility function to find tau that max utility
+    CESres = minimize_scalar(obj, bounds=(0, 1), method='bounded') # 0 < tau < 1
+
+    CES_optimal_tau = CESres.x
+    CES_max_utility = -CESres.fun
+
+    return CES_optimal_tau, CES_max_utility
