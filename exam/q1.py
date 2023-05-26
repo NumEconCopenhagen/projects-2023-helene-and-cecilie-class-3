@@ -41,8 +41,8 @@ def optimal_tau():
 
     return optimal_tau, max_utility
 
-sigma = 1.001
-rho = 1.001
+sigma = 1.5
+rho = 1.5
 epsilon = 1.0
 
 def CES_utility(tau, kappa, alpha, nu, w, sigma, rho, epsilon, L):
@@ -64,10 +64,11 @@ def labor_supply(tau, w):
     res = optimize.minimize(obj, x0, bounds=[(L_min, L_max)], method='Nelder-Mead')
     # Find the optimal labor supply that maximizes utility
     optimal_L = res.x[0]
-    G = tau*w*optimal_L
+    
     return optimal_L
 
-def find_G(tau, w, L):
+def find_G(tau, w):
+    L = labor_supply(tau, w)
     return tau*w*L
 
 # solve for optimal tau
